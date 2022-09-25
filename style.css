@@ -1,0 +1,25 @@
+@font-face {
+    font-family: PressStart2P;
+    src: url(fonts/PressStart2P.ttf);
+}
+
+body {
+    background-color: rgb(50, 17, 112);
+    font-family: PressStart2P;
+}
+
+h1 {
+    text-align: center;
+    color: rgb(0, 62, 177);
+}
+
+p {
+    font-size: 10px;
+}
+
+button {
+    border-color: rgb(255, 196, 0);
+    background-color: rgb(217, 255, 0);
+    color: darkred;
+    font-family: PressStart2P;
+}
