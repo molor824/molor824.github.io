@@ -1,4 +1,9 @@
-import './style.css'
-import canvasSetup from './canvas';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
 
-canvasSetup(document.getElementById("bg-canvas") as HTMLCanvasElement);
+const app = createApp(App);
+
+app.use(router);
+
+app.mount("#app");
