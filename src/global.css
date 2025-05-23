@@ -1,0 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+@theme {
+    --color-background: oklch(0.1735 0.0296 245.65);
+    --color-primary: oklch(0.7412 0.1258 237.18);
+    --font-default: "Montserrat", sans-serif;
+}
+body {
+    @apply bg-background text-white font-default;
+}

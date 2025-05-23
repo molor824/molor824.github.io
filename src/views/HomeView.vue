@@ -1,16 +1,10 @@
-<template>
-  <h1 class="intro">
-    Hello, I am <span class="name">Molor Margad-Erdene</span>. You can check out
-    my projects involving graphics programming, web development, and more.
-  </h1>
-</template>
+<script setup lang="ts">
+import Pfp from "@/components/Pfp.vue";
+</script>
 
-<style scoped>
-.intro {
-  font-size: 3em;
-}
-.name {
-  font-weight: 600;
-  color: #a9d7f1;
-}
-</style>
+<template>
+  <section class="flex flex-col gap-2 items-center" id="home">
+    <Pfp :size="200" />
+    <h1 class="text-6xl text-primary">Molor Margad-Erdene</h1>
+  </section>
+</template>
