@@ -1,8 +1,8 @@
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
+import { mount } from "svelte";
+import App from "./App.svelte";
 
-const app = createApp(App);
+const app = mount(App, {
+  target: document.getElementById("app")!,
+});
 
-app.use(router);
-app.mount("#app");
+export default app;
