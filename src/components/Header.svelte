@@ -2,6 +2,7 @@
   const ROUTES = [
     { name: "Home", path: "#" },
     { name: "Projects", path: "#projects" },
+    { name: "Competitions", path: "#competitions" },
     { name: "Contact", path: "#contact" },
   ];
 </script>
