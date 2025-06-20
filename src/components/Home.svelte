@@ -1,6 +1,7 @@
 <script lang="ts">
   import FadeIn from "./FadeIn.svelte";
   import Pfp from "./Pfp.svelte";
+  import ScrollTexts from "./ScrollTexts.svelte";
 </script>
 
 {#snippet seperator()}
@@ -25,6 +26,15 @@
       >
       <br />
       Aspiring software/hardware engineer with various interests in
+      <ScrollTexts
+        class="text-blue-300 font-bold"
+        texts={[
+          "Full stack",
+          "GPU Computing",
+          "Computer Graphics",
+          "IoT & Robotics",
+        ]}
+      />
     </p>
   </FadeIn>
   <FadeIn class="w-full" fadeDelay={100}>

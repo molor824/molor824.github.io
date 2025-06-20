@@ -167,7 +167,7 @@ void main() {
       );
       gl.uniform3fv(
         rgbBlendUniform,
-        spreads.map((spread) => Math.max(1 - spread * 8, 0))
+        spreads.map((spread) => 1 - spread * spread)
       );
 
       gl.clearColor(0, 0, 0, 0);
