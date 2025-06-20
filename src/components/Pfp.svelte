@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Attachment } from "svelte/attachments";
+  import { twMerge } from "tailwind-merge";
 
   const { class: _class }: { class?: string } = $props();
 
@@ -66,15 +67,15 @@ void main() {
 }`;
   console.log(vertexShaderSrc, fragmentShaderSrc);
 
-  let hovering = false;
+  let hoveringPosition: { x: number; y: number } | null = null;
 
   const canvasAttachment: Attachment<HTMLCanvasElement> = (canvas) => {
-    const gl = canvas.getContext("webgl2");
+    let gl = canvas.getContext("webgl2");
     if (!gl) {
       return;
     }
 
-    const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
+    let vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
     gl.shaderSource(vertexShader, vertexShaderSrc);
     gl.compileShader(vertexShader);
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
@@ -83,7 +84,7 @@ void main() {
       );
     }
 
-    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
+    let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
     gl.shaderSource(fragmentShader, fragmentShaderSrc);
     gl.compileShader(fragmentShader);
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
@@ -92,7 +93,7 @@ void main() {
       );
     }
 
-    const program = gl.createProgram();
+    let program = gl.createProgram();
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
@@ -101,46 +102,72 @@ void main() {
     }
     gl.useProgram(program);
 
-    const rgbSeperationUniform = gl.getUniformLocation(
-      program,
-      "rgbSeperation"
-    );
-    const rgbBlendUniform = gl.getUniformLocation(program, "rgbBlend");
+    let rgbSeperationUniform = gl.getUniformLocation(program, "rgbSeperation");
+    let rgbBlendUniform = gl.getUniformLocation(program, "rgbBlend");
 
-    const observer = new ResizeObserver((entries) => {
+    let observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === canvas) {
           const rect = entry.contentRect;
           canvas.width = rect.width;
           canvas.height = rect.height;
-          gl.viewport(0, 0, rect.width, rect.height);
+          gl!.viewport(0, 0, rect.width, rect.height);
         }
       }
     });
 
     observer.observe(canvas);
 
-    let previousTime = performance.now();
-    let spread = 0;
-    let strength = 20;
+    let previousTime: number;
+    let spreads = [1, 1, 1];
+    let strength = 15;
+    let centerRadius = 20;
 
     function render(time: number) {
+      if (!previousTime) {
+        previousTime = time;
+      }
       if (!gl) return;
 
       let deltams = time - previousTime;
       previousTime = time;
       let delta = deltams / 1000;
 
-      let targetSpread = hovering ? 1 : 0;
-      spread += (targetSpread - spread) * (1 - Math.exp(-delta * strength));
+      let targetSpreads: number[];
+      if (hoveringPosition) {
+        const rect = canvas.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const dx = hoveringPosition.x - centerX;
+        const dy = hoveringPosition.y - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const angle = (Math.atan2(-dy, dx) * 180) / Math.PI;
+        if (distance < centerRadius) {
+          targetSpreads = [1, 1, 1];
+        } else {
+          targetSpreads = [
+            angle > 20 && angle < 160,
+            angle > -100 && angle < 40,
+            angle > 140 || angle < -80,
+          ].map((v) => (v ? 1 : 0));
+        }
+      } else {
+        targetSpreads = [0, 0, 0];
+      }
+
+      spreads = spreads.map(
+        (spread, i) =>
+          spread +
+          (targetSpreads[i] - spread) * (1 - Math.exp(-strength * delta))
+      );
 
       gl.uniform3fv(
         rgbSeperationUniform,
-        [0, 0, 0].map(() => spread / 8)
+        spreads.map((spread) => spread / 8)
       );
       gl.uniform3fv(
         rgbBlendUniform,
-        [0, 0, 0].map(() => Math.max(1 - spread * 2, 0))
+        spreads.map((spread) => Math.max(1 - spread * 8, 0))
       );
 
       gl.clearColor(0, 0, 0, 0);
@@ -153,17 +180,24 @@ void main() {
     requestAnimationFrame(render);
 
     return () => {
-      gl.deleteProgram(program);
-      gl.deleteShader(vertexShader);
-      gl.deleteShader(fragmentShader);
+      gl!.deleteProgram(program);
+      gl!.deleteShader(vertexShader);
+      gl!.deleteShader(fragmentShader);
       observer.disconnect();
+      gl = null;
     };
   };
 </script>
 
 <canvas
   {@attach canvasAttachment}
-  class={_class}
-  onmouseenter={() => (hovering = true)}
-  onmouseleave={() => (hovering = false)}
+  class={twMerge("rounded-full aspect-square h-[200px]", _class)}
+  onmousemove={(event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    hoveringPosition = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+  }}
+  onmouseleave={() => (hoveringPosition = null)}
 ></canvas>
