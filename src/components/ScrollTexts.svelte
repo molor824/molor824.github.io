@@ -17,11 +17,11 @@
   let nextIndex = $derived((currentIndex + 1) % texts.length);
   let scroll = $state(false);
 
-  let interval: number;
   let currentTextWidth = $state(0);
   let currentTextHeight = $state(0);
   let nextTextWidth = $state(0);
 
+  let interval: number;
   onMount(() => {
     interval = setInterval(() => {
       scroll = true;

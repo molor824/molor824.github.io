@@ -30,9 +30,9 @@
         class="text-blue-300 font-bold"
         texts={[
           "Full stack",
-          "GPU Computing",
           "Computer Graphics",
           "IoT & Robotics",
+          "Image Processing",
         ]}
       />
     </p>
