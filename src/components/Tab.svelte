@@ -1,20 +1,15 @@
 <script lang="ts">
-  import type { Component } from "svelte";
+  import { setContext, type Snippet } from "svelte";
 
-  const {
-    tabs = {},
-  }: {
-    tabs?: Record<string, () => Component>;
-  } = $props();
+  const { children }: { children?: Snippet } = $props();
 
-  let currentTab = $state<string>("");
-  let CurrentComponent = $derived(tabs[currentTab]?.());
+  let currentTab = $state("");
+  setContext("tab", {
+    currentTab: () => currentTab,
+    setCurrentTab: (value: string) => (currentTab = value),
+  });
 </script>
 
-<nav class="flex gap-4">
-  {#each Object.keys(tabs) as tab (tab)}
-    <button onclick={() => (currentTab = tab)}>{tab}</button>
-  {/each}
-</nav>
-
-<CurrentComponent></CurrentComponent>
+<div class="flex flex-col gap-4">
+  {@render children?.()}
+</div>

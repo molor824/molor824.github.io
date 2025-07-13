@@ -3,6 +3,10 @@
   import Pfp from "./Pfp.svelte";
   import ScrollTexts from "./ScrollTexts.svelte";
   import Tab from "./Tab.svelte";
+  import TabContent from "./TabContent.svelte";
+  import TabContents from "./TabContents.svelte";
+  import TabHeader from "./TabHeader.svelte";
+  import TabHeaders from "./TabHeaders.svelte";
 
   const PROJECTS = {
     webdev: [
@@ -104,7 +108,16 @@
   <section class="flex flex-col gap-4 items-center" id="projects">
     <FadeIn class="flex flex-col items-center gap-2" fadeDelay={200}>
       <h1 class="text-4xl text-primary font-bold">Projects</h1>
-      <Tab tabs={{ home: { component: Pfp } }}></Tab>
+      <Tab>
+        <TabHeaders>
+          <TabHeader value="home">Home</TabHeader>
+          <TabHeader value="about">About</TabHeader>
+        </TabHeaders>
+        <TabContents>
+          <TabContent value="home">Home content</TabContent>
+          <TabContent value="about">About content</TabContent>
+        </TabContents>
+      </Tab>
     </FadeIn>
   </section>
 </main>
