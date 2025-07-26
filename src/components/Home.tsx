@@ -1,7 +1,10 @@
+import type { PropsWithChildren, ReactNode } from "react";
 import FadeIn from "./FadeIn";
 import Pfp from "./Pfp";
 import ScrollTexts from "./ScrollTexts";
+import { twMerge } from "tailwind-merge";
 import Slider, { Slide } from "./Slider";
+import UnorderedList, { ListItem } from "./UnorderedList";
 
 const PROJECTS = {
   webdev: [
@@ -25,7 +28,7 @@ const PROJECTS = {
     {
       name: "Voxel Renderer",
       description:
-        "Voxel renderer that renders voxel by raymarching, completely removing a mesh generation stage, allowing for more voxel resolution with minimal cost!",
+        "Raymarching based voxel renderer. Works on extreme high detail voxels with minimal performance loss!",
     },
   ],
   gameDev: [
@@ -38,6 +41,12 @@ const PROJECTS = {
       name: "Portal",
       description: "Prototype of accurate portal rendering in Unity.",
     },
+    {
+      name: "Tetry",
+      description:
+        "Tetris written according to the specifications, in bevy game engine.",
+    },
+    {},
   ],
   programming: [
     {
@@ -65,16 +74,22 @@ const PROJECTS = {
 };
 
 function Seperator() {
-  return <div className="w-full h-[1px] bg-white" />;
+  return <div className="w-full h-[2px] bg-white/20" />;
+}
+function Card({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) {
+  return <div className={twMerge("rounded-xl p-4", className)}>{children}</div>;
 }
 
 function Home() {
   return (
     <main className="container mx-auto flex flex-col gap-4 items-center">
-      <FadeIn className="self-stretch text-center flex flex-col items-center gap-2 pt-[100px]">
-        <section className="flex flex-col gap-4 items-center" id="home">
+      <FadeIn className="self-stretch text-center pt-[100px]">
+        <section className="flex flex-col gap-8 items-center" id="home">
           <Pfp />
-          <h1 className="text-6xl text-primary">Molor Margad-Erdene</h1>
+          <h1 className="text-6xl font-normal">Molor Margad-Erdene</h1>
           <div className="text-xl">
             Computer science student at{" "}
             <a
@@ -102,21 +117,49 @@ function Home() {
         <Seperator />
       </FadeIn>
       <section
-        className="flex flex-col gap-4 self-stretch items-stretch px-8"
+        className="flex flex-col gap-4 self-stretch items-stretch"
         id="projects"
       >
         <FadeIn className="flex flex-col items-stretch gap-2" fadeDelay={200}>
-          <h1 className="text-4xl text-primary font-bold text-center">
-            Projects
-          </h1>
-          <Slider className="h-[300px]">
-            {PROJECTS.programming.map((p) => (
-              <Slide key={p.name}>
-                <h1 className="font-bold text-xl">{p.name}</h1>
-                <p>{p.description}</p>
-              </Slide>
-            ))}
-          </Slider>
+          <h1>Projects</h1>
+          <Card className="bg-background1 flex flex-col gap-8">
+            <h2>Web development</h2>
+            <Seperator />
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-4 flex-1 text-lg">
+                <h3>Yomimasho</h3>
+                <p>
+                  Full stack web application for users to learn and teach
+                  Japanese through stories.
+                </p>
+                <br />
+                <h3 className="text-xl text-start">Features</h3>
+                <UnorderedList>
+                  <ListItem>
+                    Click on words to understand meaning as you read a story
+                  </ListItem>
+                  <ListItem>
+                    Editor to write a story and teach others Japanese
+                  </ListItem>
+                  <ListItem>
+                    Click on words to see their meanings, how it's used in this
+                    context etc
+                  </ListItem>
+                  <ListItem>
+                    Add words to flashcard list and review them later
+                  </ListItem>
+                </UnorderedList>
+              </div>
+              <Slider className="grow aspect-[16/9] flex-1">
+                <Slide className="overflow-hidden">
+                  <img src="/yomimasho-ss1.png" className="mt-[-32px]" />
+                </Slide>
+                <Slide className="overflow-hidden">
+                  <img src="/yomimasho-ss2.png" className="mt-[-32px]" />
+                </Slide>
+              </Slider>
+            </div>
+          </Card>
         </FadeIn>
       </section>
     </main>

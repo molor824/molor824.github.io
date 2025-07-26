@@ -3,9 +3,21 @@
 
 @theme {
     --color-background: oklch(0.1735 0.0296 245.65);
+    --color-background1: oklch(0.2029 0.0419 245.65);
     --color-primary: oklch(0.7412 0.1258 237.18);
     --font-default: "Montserrat", sans-serif;
 }
-body {
-    @apply bg-background text-white font-default;
+@layer base {
+    body {
+        @apply bg-background text-white font-default;
+    }
+    h1 {
+        @apply text-4xl font-bold text-primary text-center;
+    }
+    h2 {
+        @apply text-3xl font-bold text-primary text-center;
+    }
+    h3 {
+        @apply text-3xl font-bold text-center;
+    }
 }

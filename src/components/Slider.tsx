@@ -20,7 +20,10 @@ type Props = {
   sliderGap?: number;
   className?: string;
 };
-function Slide({ children }: PropsWithChildren<{}>) {
+function Slide({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) {
   const { addSlide, size } = useContext(SliderContext);
   const ref = useRef<ReturnType<typeof addSlide>>(null!);
   useEffect(() => {
@@ -28,7 +31,12 @@ function Slide({ children }: PropsWithChildren<{}>) {
     return () => ref.current.remove();
   }, []);
   return (
-    <div style={{ width: size.width, height: size.height }}>{children}</div>
+    <div
+      className={className}
+      style={{ width: size.width, height: size.height }}
+    >
+      {children}
+    </div>
   );
 }
 function Slider({
