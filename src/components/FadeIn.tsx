@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PropsWithChildren } from "react";
+import { useState, type PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
 import { useDebounceCallback, useIntersectionObserver } from "usehooks-ts";
 
@@ -19,7 +19,7 @@ function FadeIn({
   const fadeInDebounced = useDebounceCallback(() => setFadeIn(true), fadeDelay);
   const { ref, isIntersecting } = useIntersectionObserver();
 
-  if (isIntersecting) fadeInDebounced();
+  if (isIntersecting && !fadeIn) fadeInDebounced();
 
   return (
     <div

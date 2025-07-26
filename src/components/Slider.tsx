@@ -52,7 +52,8 @@ function Slider({
   useEffect(() => {
     if (slideCount === 0) return;
     nextSlide();
-  }, [slideIndex, slideCount]);
+    return nextSlide.cancel;
+  }, [slideCount, slideIndex]);
 
   const addSlide = () => {
     let index = slideCount;

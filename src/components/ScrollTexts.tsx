@@ -28,7 +28,10 @@ function ScrollTexts({
     disableScroll();
   }, switchInterval);
 
-  useEffect(switchText, [currentIndex]);
+  useEffect(() => {
+    switchText();
+    return switchText.cancel;
+  }, [currentIndex]);
 
   const textRef = useRef<HTMLDivElement>(null!);
   const nextTextRef = useRef<HTMLDivElement>(null!);
