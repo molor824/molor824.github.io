@@ -6,7 +6,7 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import { useResizeObserver } from "usehooks-ts";
+import { useDebounceCallback, useResizeObserver } from "usehooks-ts";
 import Arrow from "../assets/Arrow";
 import { twMerge } from "tailwind-merge";
 
@@ -44,13 +44,15 @@ function Slider({
   const size = useResizeObserver({ ref });
   const distance = (size.width ?? 0) + sliderGap;
 
+  const nextSlide = useDebounceCallback(
+    () => setSlideIndex((prev) => (prev + 1) % slideCount),
+    transitionInterval
+  );
+
   useEffect(() => {
     if (slideCount === 0) return;
-    const timeout = setTimeout(() => {
-      setSlideIndex((prev) => (prev + 1) % slideCount);
-    }, transitionInterval);
-    return () => clearTimeout(timeout);
-  }, [slideIndex, slideCount, transitionInterval]);
+    nextSlide();
+  }, [slideIndex, slideCount]);
 
   const addSlide = () => {
     let index = slideCount;
