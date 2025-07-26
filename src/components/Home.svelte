@@ -108,16 +108,6 @@
   <section class="flex flex-col gap-4 items-center" id="projects">
     <FadeIn class="flex flex-col items-center gap-2" fadeDelay={200}>
       <h1 class="text-4xl text-primary font-bold">Projects</h1>
-      <Tab>
-        <TabHeaders>
-          <TabHeader value="home">Home</TabHeader>
-          <TabHeader value="about">About</TabHeader>
-        </TabHeaders>
-        <TabContents>
-          <TabContent value="home">Home content</TabContent>
-          <TabContent value="about">About content</TabContent>
-        </TabContents>
-      </Tab>
     </FadeIn>
   </section>
 </main>
