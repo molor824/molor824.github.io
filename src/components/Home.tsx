@@ -2,7 +2,6 @@ import FadeIn from "./FadeIn";
 import Pfp from "./Pfp";
 import ScrollTexts from "./ScrollTexts";
 import Slider, { Slide } from "./Slider";
-import Tab from "./Tab";
 
 const PROJECTS = {
   webdev: [
@@ -102,10 +101,15 @@ function Home() {
       <FadeIn className="w-full" fadeDelay={100}>
         <Seperator />
       </FadeIn>
-      <section className="flex flex-col gap-4 items-stretch" id="projects">
-        <FadeIn className="flex flex-col items-center gap-2" fadeDelay={200}>
-          <h1 className="text-4xl text-primary font-bold">Projects</h1>
-          <Slider className="self-stretch min-w-[300px] min-h-[500px]">
+      <section
+        className="flex flex-col gap-4 self-stretch items-stretch px-8"
+        id="projects"
+      >
+        <FadeIn className="flex flex-col items-stretch gap-2" fadeDelay={200}>
+          <h1 className="text-4xl text-primary font-bold text-center">
+            Projects
+          </h1>
+          <Slider className="h-[300px]">
             {PROJECTS.programming.map((p) => (
               <Slide key={p.name}>
                 <h1 className="font-bold text-xl">{p.name}</h1>

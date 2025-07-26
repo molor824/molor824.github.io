@@ -99,20 +99,18 @@ function Slider({
       >
         <Arrow fill="#ffffff" width={20} height={20} strokeWidth={4} />
       </button>
-      <div className="absolute bottom-[10px] left-[50%] flex gap-2">
-        {Array(slideCount)
-          .fill(0)
-          .map((_, i) => (
-            <div
-              key={i}
-              onClick={() => setSlideIndex(i)}
-              className="w-[10px] aspect-square rounded-full transition-colors"
-              style={{
-                transitionDuration: `${slideDuration}ms`,
-                backgroundColor: i === slideIndex ? "#ffffff" : "#ffffff50",
-              }}
-            ></div>
-          ))}
+      <div className="absolute bottom-[10px] left-[50%] translate-x-[-50%] flex gap-2">
+        {Array.from({ length: slideCount }, (_, i) => (
+          <div
+            key={i}
+            onClick={() => setSlideIndex(i)}
+            className="w-[10px] aspect-square rounded-full transition-colors"
+            style={{
+              transitionDuration: `${slideDuration}ms`,
+              backgroundColor: i === slideIndex ? "#ffffff" : "#ffffff50",
+            }}
+          ></div>
+        ))}
       </div>
     </div>
   );
