@@ -1,29 +1,26 @@
-<script lang="ts">
-  import type { Attachment } from "svelte/attachments";
-  import { twMerge } from "tailwind-merge";
+import { useEffect, useRef } from "react";
+import { twMerge } from "tailwind-merge";
 
-  const { class: _class }: { class?: string } = $props();
-
-  const HUE_HEXAGON = [
-    [1, 0, 0],
-    [1, 1, 0],
-    [0, 1, 0],
-    [0, 1, 1],
-    [0, 0, 1],
-    [1, 0, 1],
-  ];
-  const SECTION_VERTICES = [
-    [0, 0],
-    [(150 * Math.PI) / 180, 1],
-    [Math.PI / 2, 0.8],
-    [0, 0],
-    [Math.PI / 2, 0.8],
-    [(30 * Math.PI) / 180, 1],
-  ].map(([radian, angle]) => [
-    Math.cos(radian) * angle,
-    Math.sin(radian) * angle,
-  ]);
-  const vertexShaderSrc = `#version 300 es
+const HUE_HEXAGON = [
+  [1, 0, 0],
+  [1, 1, 0],
+  [0, 1, 0],
+  [0, 1, 1],
+  [0, 0, 1],
+  [1, 0, 1],
+];
+const SECTION_VERTICES = [
+  [0, 0],
+  [(150 * Math.PI) / 180, 1],
+  [Math.PI / 2, 0.8],
+  [0, 0],
+  [Math.PI / 2, 0.8],
+  [(30 * Math.PI) / 180, 1],
+].map(([radian, angle]) => [
+  Math.cos(radian) * angle,
+  Math.sin(radian) * angle,
+]);
+const vertexShaderSrc = `#version 300 es
 precision mediump float;
 uniform vec3 rgbSeperation;
 uniform vec3 rgbBlend;
@@ -31,8 +28,12 @@ uniform vec3 rgbBlend;
 out vec3 vColor;
 
 const float SCALE = 0.8;
-const vec3 HUE_HEXAGON[] = vec3[6](${HUE_HEXAGON.map(([r, g, b]) => `vec3(${r},${g},${b})`).join(",")});
-const vec2 SECTION_VERTICES[] = vec2[6](${SECTION_VERTICES.map(([x, y]) => `vec2(${x},${y})`).join(",")});
+const vec3 HUE_HEXAGON[] = vec3[6](${HUE_HEXAGON.map(
+  ([r, g, b]) => `vec3(${r},${g},${b})`
+).join(",")});
+const vec2 SECTION_VERTICES[] = vec2[6](${SECTION_VERTICES.map(
+  ([x, y]) => `vec2(${x},${y})`
+).join(",")});
 
 void main() {
     int section = gl_VertexID / 6 % 3;
@@ -57,7 +58,7 @@ void main() {
     gl_Position = vec4(rotator * (vertex + vec2(0, rgbSeperation[section])), 0, 1);
 }
 `;
-  const fragmentShaderSrc = `#version 300 es
+const fragmentShaderSrc = `#version 300 es
 precision mediump float;
 in vec3 vColor;
 out vec4 outColor;
@@ -65,17 +66,27 @@ out vec4 outColor;
 void main() {
     outColor = vec4(vColor, 1);
 }`;
-  console.log(vertexShaderSrc, fragmentShaderSrc);
 
-  let hoveringPosition: { x: number; y: number } | null = null;
+type Props = {
+  className?: string;
+};
 
-  const canvasAttachment: Attachment<HTMLCanvasElement> = (canvas) => {
-    let gl = canvas.getContext("webgl2");
+class PfpRender {
+  gl: WebGL2RenderingContext;
+  observer: ResizeObserver;
+  program: WebGLProgram;
+  vertexShader: WebGLShader;
+  fragmentShader: WebGLShader;
+  hoverPosition: [number, number] | null = null;
+  destroyed = false;
+
+  constructor(canvas: HTMLCanvasElement) {
+    const gl = canvas.getContext("webgl2")!;
     if (!gl) {
-      return;
+      throw new Error("WebGL2 not supported");
     }
 
-    let vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
     gl.shaderSource(vertexShader, vertexShaderSrc);
     gl.compileShader(vertexShader);
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
@@ -84,7 +95,7 @@ void main() {
       );
     }
 
-    let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
     gl.shaderSource(fragmentShader, fragmentShaderSrc);
     gl.compileShader(fragmentShader);
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
@@ -93,7 +104,7 @@ void main() {
       );
     }
 
-    let program = gl.createProgram();
+    const program = gl.createProgram();
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
@@ -102,10 +113,16 @@ void main() {
     }
     gl.useProgram(program);
 
-    let rgbSeperationUniform = gl.getUniformLocation(program, "rgbSeperation");
-    let rgbBlendUniform = gl.getUniformLocation(program, "rgbBlend");
+    const rgbSeperationUniform = gl.getUniformLocation(
+      program,
+      "rgbSeperation"
+    );
+    const rgbBlendUniform = gl.getUniformLocation(program, "rgbBlend");
+    if (!rgbSeperationUniform || !rgbBlendUniform) {
+      throw new Error("Failed to get uniform locations");
+    }
 
-    let observer = new ResizeObserver((entries) => {
+    const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === canvas) {
           const rect = entry.contentRect;
@@ -115,31 +132,38 @@ void main() {
         }
       }
     });
-
     observer.observe(canvas);
+
+    this.gl = gl;
+    this.observer = observer;
+    this.program = program;
+    this.vertexShader = vertexShader;
+    this.fragmentShader = fragmentShader;
 
     let previousTime: number;
     let spreads = [1, 1, 1];
     let strength = 15;
     let centerRadius = 20;
 
-    function render(time: number) {
+    const render = (time: number) => {
+      if (this.destroyed) {
+        return;
+      }
       if (!previousTime) {
         previousTime = time;
       }
-      if (!gl) return;
 
       let deltams = time - previousTime;
       previousTime = time;
       let delta = deltams / 1000;
 
       let targetSpreads: number[];
-      if (hoveringPosition) {
+      if (this.hoverPosition) {
         const rect = canvas.getBoundingClientRect();
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        const dx = hoveringPosition.x - centerX;
-        const dy = hoveringPosition.y - centerY;
+        const dx = this.hoverPosition[0] - centerX;
+        const dy = this.hoverPosition[1] - centerY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         const angle = (Math.atan2(-dy, dx) * 180) / Math.PI;
         if (distance < centerRadius) {
@@ -161,43 +185,66 @@ void main() {
           (targetSpreads[i] - spread) * (1 - Math.exp(-strength * delta))
       );
 
-      gl.uniform3fv(
+      this.gl.uniform3fv(
         rgbSeperationUniform,
         spreads.map((spread) => spread / 8)
       );
-      gl.uniform3fv(
+      this.gl.uniform3fv(
         rgbBlendUniform,
         spreads.map((spread) => 1 - spread * spread)
       );
 
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      this.gl.clearColor(0, 0, 0, 0);
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6 * 3);
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * 3);
 
       requestAnimationFrame(render);
-    }
+    };
     requestAnimationFrame(render);
+  }
+  destroy() {
+    this.observer.disconnect();
+    this.gl.deleteProgram(this.program);
+    this.gl.deleteShader(this.vertexShader);
+    this.gl.deleteShader(this.fragmentShader);
+    this.destroyed = true;
+  }
+}
+function Pfp({ className }: Props) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<PfpRender | null>(null);
 
+  useEffect(() => {
+    if (!canvasRef.current) {
+      return;
+    }
+    rendererRef.current = new PfpRender(canvasRef.current);
     return () => {
-      gl!.deleteProgram(program);
-      gl!.deleteShader(vertexShader);
-      gl!.deleteShader(fragmentShader);
-      observer.disconnect();
-      gl = null;
+      rendererRef.current?.destroy();
     };
-  };
-</script>
+  }, []);
 
-<canvas
-  {@attach canvasAttachment}
-  class={twMerge("rounded-full aspect-square h-[200px]", _class)}
-  onmousemove={(event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    hoveringPosition = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    };
-  }}
-  onmouseleave={() => (hoveringPosition = null)}
-></canvas>
+  return (
+    <canvas
+      ref={canvasRef}
+      className={twMerge("rounded-full aspect-square h-[200px]", className)}
+      onMouseMove={(e) => {
+        if (!rendererRef.current) {
+          return;
+        }
+        const rect = e.currentTarget.getBoundingClientRect();
+        rendererRef.current.hoverPosition = [
+          e.clientX - rect.left,
+          e.clientY - rect.top,
+        ];
+      }}
+      onMouseLeave={() => {
+        if (rendererRef.current) {
+          rendererRef.current.hoverPosition = null;
+        }
+      }}
+    ></canvas>
+  );
+}
+export default Pfp;
