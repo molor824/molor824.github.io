@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { useDebounceCallback, useResizeObserver } from "usehooks-ts";
+import useResizeObserver from "../hooks/useResizeObserver";
 
 type Props = {
   className?: string;
@@ -19,24 +19,21 @@ function ScrollTexts({
   const nextIndex = (currentIndex + 1) % texts.length;
   const [scroll, setScroll] = useState(false);
 
-  const disableScroll = useDebounceCallback(() => {
-    setScroll(false);
-    setCurrentIndex(nextIndex);
-  }, scrollDuration);
-  const switchText = useDebounceCallback(() => {
-    setScroll(true);
-    disableScroll();
-  }, switchInterval);
-
   useEffect(() => {
-    switchText();
-    return switchText.cancel;
-  }, [currentIndex]);
+    const interval = setInterval(() => {
+      setScroll(true);
+      setTimeout(() => {
+        setScroll(false);
+        setCurrentIndex((prev) => (prev + 1) % texts.length)
+      }, scrollDuration);
+    }, switchInterval);
+    return () => clearInterval(interval);
+  }, [switchInterval, scrollDuration, texts.length]);
 
   const textRef = useRef<HTMLDivElement>(null!);
   const nextTextRef = useRef<HTMLDivElement>(null!);
-  const textSize = useResizeObserver({ ref: textRef });
-  const nextTextSize = useResizeObserver({ ref: nextTextRef });
+  const textSize = useResizeObserver(textRef) ?? { width: 0, height: 0 };
+  const nextTextSize = useResizeObserver(nextTextRef) ?? { width: 0, height: 0 };
 
   return (
     <div
@@ -45,15 +42,15 @@ function ScrollTexts({
         className
       )}
       style={{
-        width: `${scroll ? nextTextSize.width ?? 0 : textSize.width ?? 0}px`,
-        height: `${textSize.height ?? 0}px`,
+        width: `${scroll ? nextTextSize.width : textSize.width}px`,
+        height: `${textSize.height}px`,
         transitionDuration: `${scrollDuration}ms`,
       }}
     >
       <div
         className="absolute top-0 left-0 text-start transition-all"
         style={{
-          transform: `translateY(${scroll ? -(textSize.height ?? 0) : 0}px)`,
+          transform: `translateY(${scroll ? -textSize.height : 0}px)`,
           transitionDuration: `${scroll ? scrollDuration : 0}ms`,
         }}
       >

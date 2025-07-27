@@ -6,9 +6,9 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import { useDebounceCallback, useResizeObserver } from "usehooks-ts";
 import Arrow from "../assets/Arrow";
 import { twMerge } from "tailwind-merge";
+import useResizeObserver from "../hooks/useResizeObserver";
 
 const SliderContext = createContext<{
   size: { width: number; height: number };
@@ -49,19 +49,14 @@ function Slider({
   const [slideCount, setSlideCount] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const ref = useRef<HTMLDivElement>(null!);
-  const size = useResizeObserver({ ref });
-  const distance = (size.width ?? 0) + sliderGap;
-
-  const nextSlide = useDebounceCallback(
-    () => setSlideIndex((prev) => (prev + 1) % slideCount),
-    transitionInterval
-  );
+  const size = useResizeObserver(ref) ?? {width: 0, height: 0};
+  const distance = size.width + sliderGap;
 
   useEffect(() => {
     if (slideCount === 0) return;
-    nextSlide();
-    return nextSlide.cancel;
-  }, [slideCount, slideIndex]);
+    const timeout = setTimeout(() => setSlideIndex((prev) => (prev + 1) % slideCount), transitionInterval);
+    return () => clearTimeout(timeout);
+  }, [slideCount, slideIndex, transitionInterval]);
 
   const addSlide = () => {
     let index = slideCount;
@@ -90,7 +85,7 @@ function Slider({
         <SliderContext.Provider
           value={{
             addSlide,
-            size: { width: size.width ?? 0, height: size.height ?? 0 },
+            size: { width: size.width, height: size.height },
           }}
         >
           {children}

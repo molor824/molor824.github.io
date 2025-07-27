@@ -1,4 +1,4 @@
-import type { PropsWithChildren, ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 import FadeIn from "./FadeIn";
 import Pfp from "./Pfp";
 import ScrollTexts from "./ScrollTexts";

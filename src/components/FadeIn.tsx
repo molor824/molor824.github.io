@@ -1,6 +1,6 @@
-import { useState, type PropsWithChildren } from "react";
+import { useEffect, useRef, useState, type PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
-import { useDebounceCallback, useIntersectionObserver } from "usehooks-ts";
+import useIntersectionObserver from "../hooks/useIntersectionObserver";
 
 type Props = {
   fadeDuration?: number;
@@ -16,10 +16,14 @@ function FadeIn({
   className,
 }: PropsWithChildren<Props>) {
   let [fadeIn, setFadeIn] = useState(false);
-  const fadeInDebounced = useDebounceCallback(() => setFadeIn(true), fadeDelay);
-  const { ref, isIntersecting } = useIntersectionObserver();
-
-  if (isIntersecting && !fadeIn) fadeInDebounced();
+  const ref = useRef<HTMLDivElement>(null!);
+  const isIntersecting = useIntersectionObserver(ref);
+  
+  useEffect(() => {
+    if (isIntersecting) {
+      setTimeout(() => setFadeIn(true), fadeDelay);
+    }
+  }, [isIntersecting, fadeDelay]);
 
   return (
     <div
