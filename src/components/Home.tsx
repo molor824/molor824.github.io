@@ -12,11 +12,23 @@ const PROJECTS = {
       name: "Yomimasho",
       description:
         "Full stack web application for users to learn and teach Japanese through stories.",
+      features: [
+        "Click on words to understand meaning as you read a story",
+        "Editor to write a story and teach others Japanese",
+        "Click on words to see their meanings, how it's used in this context etc",
+        "Add words to flashcard list and review them later",
+      ],
+      pictures: ["/yomimasho-ss1.png", "/yomimasho-ss2.png"],
     },
     {
       name: "Team Manager",
       description:
         "Full stack web application for teams to manage project tasks.",
+      features: [
+        "Create team and manage tasks",
+        "See task deadlines and schedules as a team member",
+        "Organize tasks by progress and record start and completion time of tasks",
+      ],
     },
   ],
   computerGraphics: [
@@ -86,8 +98,8 @@ function Card({
 function Home() {
   return (
     <main className="container mx-auto flex flex-col gap-4 items-center">
-      <FadeIn className="self-stretch text-center pt-[100px]">
-        <section className="flex flex-col gap-8 items-center" id="home">
+      <section id="home">
+        <FadeIn className="flex flex-col gap-4 items-center text-center pt-[100px]">
           <Pfp />
           <h1 className="text-6xl font-normal">Molor Margad-Erdene</h1>
           <div className="text-xl">
@@ -111,54 +123,45 @@ function Home() {
               ]}
             />
           </div>
-        </section>
-      </FadeIn>
+        </FadeIn>
+      </section>
       <FadeIn className="w-full" fadeDelay={100}>
         <Seperator />
       </FadeIn>
-      <section
-        className="flex flex-col gap-4 self-stretch items-stretch"
-        id="projects"
-      >
+      <section className="self-stretch" id="projects">
         <FadeIn className="flex flex-col items-stretch gap-2" fadeDelay={200}>
           <h1>Projects</h1>
           <Card className="bg-background1 flex flex-col gap-8">
             <h2>Web development</h2>
             <Seperator />
-            <div className="flex gap-4">
-              <div className="flex flex-col gap-4 flex-1 text-lg">
-                <h3>Yomimasho</h3>
-                <p>
-                  Full stack web application for users to learn and teach
-                  Japanese through stories.
-                </p>
-                <br />
-                <h3 className="text-xl text-start">Features</h3>
-                <UnorderedList>
-                  <ListItem>
-                    Click on words to understand meaning as you read a story
-                  </ListItem>
-                  <ListItem>
-                    Editor to write a story and teach others Japanese
-                  </ListItem>
-                  <ListItem>
-                    Click on words to see their meanings, how it's used in this
-                    context etc
-                  </ListItem>
-                  <ListItem>
-                    Add words to flashcard list and review them later
-                  </ListItem>
-                </UnorderedList>
+            {PROJECTS.webdev.map((project) => (
+              <div className="flex gap-4" key={project.name}>
+                <div className="flex flex-col gap-4 flex-1 text-lg">
+                  <h3>{project.name}</h3>
+                  <p>{project.description}</p>
+                  {project.features && (
+                    <>
+                      <br />
+                      <h3 className="text-xl text-start">Features</h3>
+                      <UnorderedList>
+                        {project.features.map((feature, i) => (
+                          <ListItem key={i}>{feature}</ListItem>
+                        ))}
+                      </UnorderedList>
+                    </>
+                  )}
+                </div>
+                {project.pictures && (
+                  <Slider className="grow aspect-[16/9] flex-1">
+                    {project.pictures.map((picture, i) => (
+                      <Slide key={i}>
+                        <img src={picture} />
+                      </Slide>
+                    ))}
+                  </Slider>
+                )}
               </div>
-              <Slider className="grow aspect-[16/9] flex-1">
-                <Slide className="overflow-hidden">
-                  <img src="/yomimasho-ss1.png" className="mt-[-32px]" />
-                </Slide>
-                <Slide className="overflow-hidden">
-                  <img src="/yomimasho-ss2.png" className="mt-[-32px]" />
-                </Slide>
-              </Slider>
-            </div>
+            ))}
           </Card>
         </FadeIn>
       </section>
