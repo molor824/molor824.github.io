@@ -18,7 +18,10 @@ const PROJECTS = {
         "Click on words to see their meanings, how it's used in this context etc",
         "Add words to flashcard list and review them later",
       ],
-      pictures: ["/yomimasho-ss1.png", "/yomimasho-ss2.png"],
+      pictures: ["/yomimasho-ss1.png", "/yomimasho-ss2.png"].map(
+        (url) => () => <img src={url} className="mt-[-36px]" />
+      ),
+      aspect: 16 / 9,
     },
     {
       name: "Team Manager",
@@ -152,10 +155,13 @@ function Home() {
                   )}
                 </div>
                 {project.pictures && (
-                  <Slider className="grow aspect-[16/9] flex-1">
-                    {project.pictures.map((picture, i) => (
+                  <Slider
+                    className="grow flex-1"
+                    style={{ aspectRatio: project.aspect }}
+                  >
+                    {project.pictures.map((PicElement, i) => (
                       <Slide key={i}>
-                        <img src={picture} />
+                        <PicElement />
                       </Slide>
                     ))}
                   </Slider>

@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type PropsWithChildren,
 } from "react";
 import Arrow from "../assets/Arrow";
@@ -19,6 +20,7 @@ type Props = {
   transitionInterval?: number;
   sliderGap?: number;
   className?: string;
+  style?: CSSProperties;
 };
 function Slide({
   children,
@@ -45,16 +47,20 @@ function Slider({
   sliderGap = 16,
   className,
   children,
+  style,
 }: PropsWithChildren<Props>) {
   const [slideCount, setSlideCount] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const ref = useRef<HTMLDivElement>(null!);
-  const size = useResizeObserver(ref) ?? {width: 0, height: 0};
+  const size = useResizeObserver(ref) ?? { width: 0, height: 0 };
   const distance = size.width + sliderGap;
 
   useEffect(() => {
     if (slideCount === 0) return;
-    const timeout = setTimeout(() => setSlideIndex((prev) => (prev + 1) % slideCount), transitionInterval);
+    const timeout = setTimeout(
+      () => setSlideIndex((prev) => (prev + 1) % slideCount),
+      transitionInterval
+    );
     return () => clearTimeout(timeout);
   }, [slideCount, slideIndex, transitionInterval]);
 
@@ -73,7 +79,11 @@ function Slider({
   };
 
   return (
-    <div ref={ref} className={twMerge("overflow-hidden relative", className)}>
+    <div
+      ref={ref}
+      style={style}
+      className={twMerge("overflow-hidden relative", className)}
+    >
       <div
         className="absolute top-0 left-0 flex transition-all"
         style={{
