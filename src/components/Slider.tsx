@@ -105,17 +105,17 @@ function Slider({
         onClick={() =>
           setSlideIndex((prev) => (prev - 1 + slideCount) % slideCount)
         }
-        className="absolute top-[50%] left-8 p-2 bg-transparent hover:bg-white/10 rounded-xl"
+        className="absolute top-[50%] left-8 p-2 bg-black/20 hover:bg-black/30 rounded-xl"
       >
         <Arrow flip fill="#ffffff" width={20} height={20} strokeWidth={4} />
       </button>
       <button
         onClick={() => setSlideIndex((prev) => (prev + 1) % slideCount)}
-        className="absolute top-[50%] right-8 p-2 bg-transparent hover:bg-white/10 rounded-xl"
+        className="absolute top-[50%] right-8 p-2 bg-black/20 hover:bg-black/30 rounded-xl"
       >
         <Arrow fill="#ffffff" width={20} height={20} strokeWidth={4} />
       </button>
-      <div className="absolute bottom-[10px] left-[50%] translate-x-[-50%] flex gap-2">
+      <div className="absolute bottom-[10px] left-[50%] translate-x-[-50%] flex gap-2 p-2 rounded-full bg-black/20">
         {Array.from({ length: slideCount }, (_, i) => (
           <div
             key={i}

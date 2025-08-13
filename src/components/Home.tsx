@@ -10,6 +10,7 @@ const PROJECTS = {
   webdev: [
     {
       name: "Yomimasho",
+      url: "https://gitlab.com/yomimasho/yomimasho",
       description:
         "Full stack web application for users to learn and teach Japanese through stories.",
       features: [
@@ -19,12 +20,13 @@ const PROJECTS = {
         "Add words to flashcard list and review them later",
       ],
       pictures: ["/yomimasho-ss1.png", "/yomimasho-ss2.png"].map(
-        (url) => () => <img src={url} className="mt-[-36px]" />
+        (url) => () => <img src={url} className="mt-[-16px]" />
       ),
       aspect: 16 / 9,
     },
     {
       name: "Team Manager",
+      url: "https://github.com/molor824/team-manager",
       description:
         "Full stack web application for teams to manage project tasks.",
       features: [
@@ -32,6 +34,12 @@ const PROJECTS = {
         "See task deadlines and schedules as a team member",
         "Organize tasks by progress and record start and completion time of tasks",
       ],
+      aspect: 16 / 9,
+      pictures: [
+        "/team-manager-ss1.png",
+        "/team-manager-ss2.png",
+        "/team-manager-ss3.png",
+      ].map((url) => () => <img src={url} className="mt-[-16px]" />),
     },
   ],
   computerGraphics: [
@@ -107,11 +115,7 @@ function Home() {
           <h1 className="text-6xl font-normal">Molor Margad-Erdene</h1>
           <div className="text-xl">
             Computer science student at{" "}
-            <a
-              className="text-blue-200 transition-colors hover:text-blue-300 hover:underline"
-              href="http://elearn.nmct.edu.mn"
-              target="_blank"
-            >
+            <a href="http://elearn.nmct.edu.mn" target="_blank">
               New Mongolia College of Technology
             </a>
             <br />
@@ -140,7 +144,14 @@ function Home() {
             {PROJECTS.webdev.map((project) => (
               <div className="flex gap-4" key={project.name}>
                 <div className="flex flex-col gap-4 flex-1 text-lg">
-                  <h3>{project.name}</h3>
+                  <div className="flex justify-between items-baseline">
+                    <h3>{project.name}</h3>
+                    {
+                      <a href={project.url} target="_blank">
+                        {project.url}
+                      </a>
+                    }
+                  </div>
                   <p>{project.description}</p>
                   {project.features && (
                     <>

@@ -20,4 +20,7 @@
     h3 {
         @apply text-3xl font-bold text-center;
     }
+    a {
+        @apply text-blue-200 transition-colors hover:text-blue-300 hover:underline;
+    }
 }
