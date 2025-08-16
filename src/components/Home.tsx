@@ -5,6 +5,7 @@ import ScrollTexts from "./ScrollTexts";
 import { twMerge } from "tailwind-merge";
 import Slider, { Slide } from "./Slider";
 import UnorderedList, { ListItem } from "./UnorderedList";
+import Tab from "./Tab";
 
 const PROJECTS = {
   webdev: [
@@ -138,48 +139,60 @@ function Home() {
       <section className="self-stretch" id="projects">
         <FadeIn className="flex flex-col items-stretch gap-2" fadeDelay={200}>
           <h1>Projects</h1>
-          <Card className="bg-background1 flex flex-col gap-8">
-            <h2>Web development</h2>
-            <Seperator />
-            {PROJECTS.webdev.map((project) => (
-              <div className="flex gap-4" key={project.name}>
-                <div className="flex flex-col gap-4 flex-1 text-lg">
-                  <div className="flex justify-between items-baseline">
-                    <h3>{project.name}</h3>
-                    {
-                      <a href={project.url} target="_blank">
-                        {project.url}
-                      </a>
-                    }
-                  </div>
-                  <p>{project.description}</p>
-                  {project.features && (
-                    <>
-                      <br />
-                      <h3 className="text-xl text-start">Features</h3>
-                      <UnorderedList>
-                        {project.features.map((feature, i) => (
-                          <ListItem key={i}>{feature}</ListItem>
-                        ))}
-                      </UnorderedList>
-                    </>
-                  )}
-                </div>
-                {project.pictures && (
-                  <Slider
-                    className="grow flex-1"
-                    style={{ aspectRatio: project.aspect }}
-                  >
-                    {project.pictures.map((PicElement, i) => (
-                      <Slide key={i}>
-                        <PicElement />
-                      </Slide>
-                    ))}
-                  </Slider>
-                )}
-              </div>
-            ))}
-          </Card>
+          <Tab defaultValue="webdev" className="self-stretch">
+            <Tab.List>
+              <Tab.Trigger value="webdev">Web Development</Tab.Trigger>
+              <Tab.Trigger value="cg">Computer Graphics</Tab.Trigger>
+              <Tab.Trigger value="gamedev">Game Development</Tab.Trigger>
+              <Tab.Trigger value="elec">Electronics & IoT</Tab.Trigger>
+            </Tab.List>
+            <Tab.Content value="webdev">
+              <FadeIn fadeDelay={400}>
+                <Card className="bg-background1 flex flex-col gap-8">
+                  <h2>Web development</h2>
+                  <Seperator />
+                  {PROJECTS.webdev.map((project) => (
+                    <div className="flex gap-4" key={project.name}>
+                      <div className="flex flex-col gap-4 flex-1 text-lg">
+                        <div className="flex justify-between items-baseline">
+                          <h3>{project.name}</h3>
+                          {
+                            <a href={project.url} target="_blank">
+                              {project.url}
+                            </a>
+                          }
+                        </div>
+                        <p>{project.description}</p>
+                        {project.features && (
+                          <>
+                            <br />
+                            <h3 className="text-xl text-start">Features</h3>
+                            <UnorderedList>
+                              {project.features.map((feature, i) => (
+                                <ListItem key={i}>{feature}</ListItem>
+                              ))}
+                            </UnorderedList>
+                          </>
+                        )}
+                      </div>
+                      {project.pictures && (
+                        <Slider
+                          className="grow flex-1"
+                          style={{ aspectRatio: project.aspect }}
+                        >
+                          {project.pictures.map((PicElement, i) => (
+                            <Slide key={i}>
+                              <PicElement />
+                            </Slide>
+                          ))}
+                        </Slider>
+                      )}
+                    </div>
+                  ))}
+                </Card>
+              </FadeIn>
+            </Tab.Content>
+          </Tab>
         </FadeIn>
       </section>
     </main>
