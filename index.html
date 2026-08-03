@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/src/global.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Molor Margad-Erdene">
-    <meta name="description" content="Molor Margad-Erdene's portfolio.">
-    <title>Molor Margad-Erdene</title>
-  </head>
-  <body>
-    <div id="app" class="min-h-screen flex flex-col gap-2"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<html>
+<head>
+    <title>Molor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>M. Molor</h1>
+        <p>Welcome to my website, where I showcase my projects.</p>
+
+        <div class="sep-line"></div>
+    </header>
+
+    <div class="project-list"></div>
+
+    <template id="project-template">
+        <div class="project-list-elem">
+            <img class="thumbnail">
+        </div>
+    </template>
+
+    <script src="index.js" type="module"></script>
+</body>
 </html>
