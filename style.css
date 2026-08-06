@@ -41,17 +41,29 @@ button {
 
 h1 {
     font-size: 48px;
+    margin-bottom: 1rem;
 }
 
-.project-list {
+p {
+    margin-bottom: 1rem;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    align-items: start;
 }
 
-.project-list-elem {
-    padding: 2rem;
+.align-center {
+    align-items: center;
+}
+
+.gap-default {
+    gap: 2rem;
 }
 
 .sep-line {

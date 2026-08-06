@@ -8,27 +8,17 @@
 </head>
 <body>
     <header>
-        <h1>molor824</h1>
-        <div style="margin-top: 2rem;"></div>
-        <p>Welcome to my website, where I showcase my projects.</p>
+        <div class="flex-row align-center gap-default">
+            <canvas width="128" height="128" id="pfp-canvas"></canvas>
+            <div>
+                <h1>M. Molor</h1>
+                <p>A.K.A. molor824, molko824, moli824</p>
+                <p>Welcome to my website, where I showcase my projects.</p>
+            </div>
+        </div>
 
         <div class="sep-line"></div>
     </header>
-
-    <div style="display: flex; flex-direction: row; gap: 1rem;">
-        <button id="btn-white">Default</button>
-        <button id="btn-red">Red</button>
-        <button id="btn-green">Green</button>
-        <button id="btn-blue">Blue</button>
-    </div>
-
-    <div class="project-list"></div>
-
-    <template id="project-template">
-        <div class="project-list-elem">
-            <img class="thumbnail">
-        </div>
-    </template>
 
     <script src="index.js" type="module"></script>
 </body>
