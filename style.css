@@ -1,9 +1,31 @@
 * {
-    --background-color: #0C2C3D;
-    --text-color: #9CD2E6;
+    margin: 0;
+    border-radius: 0;
+    font-family: press-start-2p, sans-serif;
+    transition-property: color, background-color;
+    transition-duration: 0.5s;
+}
+
+body {
+    --red-bg-color: #1F0F0F;
+    --red-text-color: #F2E4E4;
+
+    --green-bg-color: #121F0F;
+    --green-text-color: #E4F2E4;
+
+    --blue-bg-color: #0F101F;
+    --blue-text-color: #E4E5F2;
+
+    --white-bg-color: #171717;
+    --white-text-color: #E6E6E6;
+
+    --background-color: var(--white-bg-color);
+    --text-color: var(--white-text-color);
+
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: press-start-2p, sans-serif;
+    padding: 2rem;
+    font-size: 16px;
 }
 
 @font-face {
@@ -11,10 +33,10 @@
     src: url('fonts/press_start_2p/PressStart2P.ttf');
 }
 
-body {
-    margin: 0;
-    padding: 2rem;
-    font-size: 16px;
+button {
+    background-color: var(--text-color);
+    color: var(--background-color);
+    padding: 4px;
 }
 
 h1 {
