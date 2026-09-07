@@ -28,6 +28,10 @@ button {
     padding: 4px;
 }
 
+main {
+    max-width: 1080px;
+}
+
 .name {
     font-size: 48px;
 }
