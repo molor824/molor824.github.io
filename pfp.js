@@ -123,13 +123,8 @@ export async function pfp(canvas) {
 
   gl.useProgram(program);
 
-  let elapsed = 0;
   function update(current) {
-    const dt = (current - elapsed) / 1000;
-    elapsed = current;
-
-    gl.uniform1f(mixLoc, -Math.cos(elapsed / 500) * 0.5 + 0.5);
-
+    gl.uniform1f(mixLoc, -Math.cos(current / 500) * 0.5 + 0.5);
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
     gl.drawArrays(gl.TRIANGLE_FAN, 4, 4);
     gl.drawArrays(gl.TRIANGLE_FAN, 8, 4);

@@ -1,25 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Molor</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molor</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="flex-row align-center gap-default">
-            <canvas width="128" height="128" id="pfp-canvas"></canvas>
-            <div>
-                <h1>M. Molor</h1>
-                <p>A.K.A. molor824, molko824, moli824</p>
-                <p>Welcome to my website, where I showcase my projects.</p>
-            </div>
-        </div>
+  <header>
+    <div class="header-intro">
+      <canvas width="128" height="128" id="pfp-canvas"></canvas>
+      <div>
+        <p class="name">M. Molor</p>
+        <p>A.K.A. molor824, molko824, moli824</p>
+        <p>Welcome to my website, where I showcase my projects.</p>
+      </div>
+      <div class="intro-links">
+        <a href="https://github.com/molor824">
+          <img width="64" src="logos/GitHub_Logos/GitHub Logos/SVG/GitHub_Invertocat_White_Clearspace.svg">
+        </a>
+        <a href="https://www.youtube.com/@molor0824">
+          <img width="64" src="logos/youtube-icon/YouTube_Icon/Digital/01 Red/yt_icon_red_digital.png">
+        </a>
+      </div>
+    </div>
 
-        <div class="sep-line"></div>
-    </header>
+    <div class="sep-line"></div>
+  </header>
 
-    <script src="index.js" type="module"></script>
+  <main>
+    <h1>Projects</h1>
+    <div class="sep-line"></div>
+    <projects-list>
+      <project-li name="rlox" href="https://github.com/molor824/rlox">
+        Lox interpreter written in rust. Originally meant to be chapter 2 of
+        <a href="https://craftinginterpreters.com/">Crafting Interpreters</a> book.
+      </project-li>
+      <project-li name="voxel-renderer" href="https://github.com/molor824/voxel-renderer">
+        Showcase renderer that renders voxels without intermediate mesh generation step,
+        allowing for higher voxel size without the cost of mesh generation.
+      </project-li>
+    </projects-list>
+  </main>
+
+  <template id="project">
+    <div>
+      <h2><a style="color: var(--text-color);" class="project-name">PROJECT NAME</a></h2>
+      <p class="project-desc">PROJECT DESC</p>
+    </div>
+  </template>
+
+  <script src="index.js" type="module"></script>
 </body>
 </html>
